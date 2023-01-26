@@ -7,14 +7,15 @@ copyright       -
 #include <iostream>
 
 #include "xmlsec/verify1.h"
+#include "xmlsec/verify2.h"
 
 #ifdef WIN32
 #include <Windows.h>
 #endif
 
 
-#define USE_XMLSEC_VERIFY1          (1)
-#define USE_XMLSEC_VERIFY2          (0)
+#define USE_XMLSEC_VERIFY1          (0)
+#define USE_XMLSEC_VERIFY2          (1)
 
 #if ((USE_XMLSEC_VERIFY1 + USE_XMLSEC_VERIFY2) != 1)
 #error "compile switch error"
@@ -58,7 +59,7 @@ int main(int argc, char** argv)
 #if USE_XMLSEC_VERIFY1
     r = verify1_main(argc, argv);
 #elif USE_XMLSEC_VERIFY2
-#error "not implemented"
+    r = verify2_main(argc, argv);
 #endif
 
 
