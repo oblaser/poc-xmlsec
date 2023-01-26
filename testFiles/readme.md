@@ -1,7 +1,8 @@
 # Test Files
 
-[./xmlsec/](./xmlsec/) contains the original files from the libxmlsec examples
+The directory [xmlsec](./xmlsec/) contains the original files from the libxmlsec examples
 
+[xml-01_signed_with_public-key.xml](./xml-01_signed_with_public-key.xml) is valid in [chilkat](https://tools.chilkat.io/xmlDsigVerify.cshtml).
 
 ## RSA Files
 
