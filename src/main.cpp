@@ -42,9 +42,12 @@ int main(int argc, char** argv)
 
 #if USE_XMLSEC_VERIFY1 || USE_XMLSEC_VERIFY2
             //"../../testFiles/xmlsec/sign1-res.xml",
-            "../../testFiles/xmlsec/sign2-res.xml",
+            //"../../testFiles/xmlsec/sign2-res.xml",
+            //"../../testFiles/xml-01_signed.xml",
+            "../../testFiles/xml-01_signed_with_public-key.xml",
 
-            "../../testFiles/xmlsec/rsapub.pem"
+            //"../../testFiles/xmlsec/rsapub.pem"
+            "../../testFiles/rsapub.pem"
 #elif USE_XMLSEC_VERIFY3
 #endif
         };
