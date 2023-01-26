@@ -2,7 +2,10 @@
 
 The directory [xmlsec](./xmlsec/) contains the original files from the libxmlsec examples
 
-[xml-01_signed_with_public-key.xml](./xml-01_signed_with_public-key.xml) is valid in [chilkat](https://tools.chilkat.io/xmlDsigVerify.cshtml).
+The following files are verified as valid in [chilkat](https://tools.chilkat.io/xmlDsigVerify.cshtml):
+- [xml-01_signed_with_public-key.xml](./xml-01_signed_with_public-key.xml)
+- [xmlsec/sign1-res_with_public-key.xml](./xmlsec/sign1-res_with_public-key.xml)
+- [xmlsec/sign2-res_with_public-key.xml](./xmlsec/sign2-res_with_public-key.xml)
 
 ## RSA Files
 
