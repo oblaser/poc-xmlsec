@@ -43,8 +43,8 @@
 #include <xmlsec/xmldsig.h>
 #include <xmlsec/crypto.h>
 
-xmlSecKeysMngrPtr load_keys(char** files, int files_size);
-int verify_file(xmlSecKeysMngrPtr mngr, const char* xml_file);
+static xmlSecKeysMngrPtr load_keys(char** files, int files_size);
+static int verify_file(xmlSecKeysMngrPtr mngr, const char* xml_file);
 
 int
 verify2_main(int argc, char **argv) {

@@ -8,6 +8,7 @@ copyright       -
 
 #include "xmlsec/verify1.h"
 #include "xmlsec/verify2.h"
+#include "xmlsec/verify3.h"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -15,9 +16,10 @@ copyright       -
 
 
 #define USE_XMLSEC_VERIFY1          (0)
-#define USE_XMLSEC_VERIFY2          (1)
+#define USE_XMLSEC_VERIFY2          (0)
+#define USE_XMLSEC_VERIFY3          (1)
 
-#if ((USE_XMLSEC_VERIFY1 + USE_XMLSEC_VERIFY2) != 1)
+#if ((USE_XMLSEC_VERIFY1 + USE_XMLSEC_VERIFY2 + USE_XMLSEC_VERIFY3) != 1)
 #error "compile switch error"
 #endif
 
@@ -49,6 +51,13 @@ int main(int argc, char** argv)
             //"../../testFiles/xmlsec/rsapub.pem"
             "../../testFiles/rsapub.pem"
 #elif USE_XMLSEC_VERIFY3
+            "../../testFiles/xmlsec/sign3-res.xml",
+            //"../../testFiles/xml-01_signed.xml",
+            //"../../testFiles/xml-01_signed_with_public-key.xml",
+            
+            "../../testFiles/xmlsec/ca2cert.pem",
+            "../../testFiles/xmlsec/cacert.pem",
+            //"../../testFiles/rsapub.pem"
 #endif
         };
 
@@ -63,6 +72,8 @@ int main(int argc, char** argv)
     r = verify1_main(argc, argv);
 #elif USE_XMLSEC_VERIFY2
     r = verify2_main(argc, argv);
+#elif USE_XMLSEC_VERIFY3
+    r = verify3_main(argc, argv);
 #endif
 
 

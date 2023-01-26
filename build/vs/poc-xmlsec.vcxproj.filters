@@ -24,12 +24,18 @@
     <ClCompile Include="..\..\src\xmlsec\verify2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\xmlsec\verify3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\xmlsec\verify1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\xmlsec\verify2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\xmlsec\verify3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
