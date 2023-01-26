@@ -122,11 +122,13 @@
     <ClCompile Include="..\..\src\xmlsec\verify1.cpp" />
     <ClCompile Include="..\..\src\xmlsec\verify2.cpp" />
     <ClCompile Include="..\..\src\xmlsec\verify3.cpp" />
+    <ClCompile Include="..\..\src\xmlsec\verify4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\xmlsec\verify1.h" />
     <ClInclude Include="..\..\src\xmlsec\verify2.h" />
     <ClInclude Include="..\..\src\xmlsec\verify3.h" />
+    <ClInclude Include="..\..\src\xmlsec\verify4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
