@@ -16,10 +16,10 @@ copyright       -
 #endif
 
 
-#define USE_XMLSEC_VERIFY1          (0)
+#define USE_XMLSEC_VERIFY1          (1)
 #define USE_XMLSEC_VERIFY2          (0)
 #define USE_XMLSEC_VERIFY3          (0)
-#define USE_XMLSEC_VERIFY4          (1)
+#define USE_XMLSEC_VERIFY4          (0)
 
 #if ((USE_XMLSEC_VERIFY1 + USE_XMLSEC_VERIFY2 + USE_XMLSEC_VERIFY3 + USE_XMLSEC_VERIFY4) != 1)
 #error "compile switch error"
@@ -45,23 +45,23 @@ int main(int argc, char** argv)
         const char* const dbg_argv[] = { binName,
 
 #if USE_XMLSEC_VERIFY1 || USE_XMLSEC_VERIFY2
-            //"../../testFiles/xmlsec/sign1-res.xml",
+            "../../testFiles/xmlsec/sign1-res.xml",
             //"../../testFiles/xmlsec/sign2-res.xml",
             //"../../testFiles/xml-01_signed.xml",
-            "../../testFiles/xml-01_signed_with_public-key.xml",
+            //"../../testFiles/xml-01_signed_with_public-key.xml",
 
-            //"../../testFiles/xmlsec/rsapub.pem"
-            "../../testFiles/rsapub.pem"
+            "../../testFiles/xmlsec/rsapub.pem"
+            //"../../testFiles/rsapub.pem"
 #elif USE_XMLSEC_VERIFY3 || USE_XMLSEC_VERIFY4
             //"../../testFiles/xmlsec/sign3-res.xml",
             "../../testFiles/xmlsec/verify4-res.xml",
             //"../../testFiles/xmlsec/verify4-bad-res.xml",
             //"../../testFiles/xml-01_signed.xml",
             //"../../testFiles/xml-01_signed_with_public-key.xml",
-            
+
             "../../testFiles/xmlsec/ca2cert.pem",
             "../../testFiles/xmlsec/cacert.pem",
-            //"../../testFiles/rsapub.pem"
+            //"../../testFiles/rsacert.pem"
 #endif
         };
 
@@ -70,6 +70,12 @@ int main(int argc, char** argv)
     }
 #endif
 
+
+    for (int i = 0; i < argc; ++i)
+    {
+        cout << "arg " << (((argc > 9) && (i < 10)) ? " " : "") << i << "    " << argv[i] << endl;
+    }
+    cout << "==================================" << endl;
 
 
 #if USE_XMLSEC_VERIFY1
