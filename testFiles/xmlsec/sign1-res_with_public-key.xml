@@ -21,12 +21,12 @@ XML Security Library example: Simple signature template file for sign1 example.
     <SignatureValue>fDKK0so/zFcmmq2X+BaVFmS0t8KB7tyW53YN6n221OArzGCs4OyWsAjj/BUR+wNF
 elOnt4fo2gPK1a3IVEhMGg==</SignatureValue>
     <KeyInfo>
-        <KeyValue>
-            <RSAKeyValue>
-                <Modulus>ANPQbQ92nlbeg1Q5JNHSO1Yey46nZ7GJltLWw1ccSvp7pnvmfUm+M521CpFpfr4EAE3UVBMoU9j/hqq3dFAc2H0=</Modulus>
-                <Exponent>AQAB</Exponent>
-            </RSAKeyValue>
-        </KeyValue>
+      <KeyValue>
+        <RSAKeyValue>
+          <Modulus>ANPQbQ92nlbeg1Q5JNHSO1Yey46nZ7GJltLWw1ccSvp7pnvmfUm+M521CpFpfr4EAE3UVBMoU9j/hqq3dFAc2H0=</Modulus>
+          <Exponent>AQAB</Exponent>
+        </RSAKeyValue>
+      </KeyValue>
     </KeyInfo>
   </Signature>
 </Envelope>
