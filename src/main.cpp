@@ -6,8 +6,18 @@ copyright       -
 
 #include <iostream>
 
+#include "xmlsec/verify1.h"
+
 #ifdef WIN32
 #include <Windows.h>
+#endif
+
+
+#define USE_XMLSEC_VERIFY1          (1)
+#define USE_XMLSEC_VERIFY2          (0)
+
+#if ((USE_XMLSEC_VERIFY1 + USE_XMLSEC_VERIFY2) != 1)
+#error "compile switch error"
 #endif
 
 
@@ -26,14 +36,16 @@ int main(int argc, char** argv)
 #if defined(_DEBUG)
     if (argc == 1)
     {
-        const char* const dbg_argv[] = { (argc >= 1 ? argv[0] : ""), // bin name
+        const char* const binName = argv[0];
+        const char* const dbg_argv[] = { binName,
 
-            // XML file
-            "../testFiles/sign1-res.xml",
-            //"../testFiles/sign2-res.xml",
+#if USE_XMLSEC_VERIFY1 || USE_XMLSEC_VERIFY2
+            //"../../testFiles/xmlsec/sign1-res.xml",
+            "../../testFiles/xmlsec/sign2-res.xml",
 
-            // key file
-            "../testFiles/rsapub.pem"
+            "../../testFiles/xmlsec/rsapub.pem"
+#elif USE_XMLSEC_VERIFY3
+#endif
         };
 
         argc = (sizeof(dbg_argv) / sizeof(dbg_argv[0]));
@@ -42,10 +54,13 @@ int main(int argc, char** argv)
 #endif
 
 
-    for (int i = 0; i < argc; ++i)
-    {
-        cout << argv[i] << endl;
-    }
+
+#if USE_XMLSEC_VERIFY1
+    r = verify1_main(argc, argv);
+#elif USE_XMLSEC_VERIFY2
+#error "not implemented"
+#endif
+
 
 
 #if defined(_DEBUG) && 1
