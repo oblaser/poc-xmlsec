@@ -75,21 +75,18 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../../sdk/iconv-1.9.2.win32/include;../../sdk/libxml2-2.7.8.win32/include;../../sdk/libxmlsec-1.2.18.win32/include;../../sdk/libxslt-1.1.26.win32/include;../../sdk/openssl-0.9.8a.win32/include;../../sdk/zlib-1.2.5/include;../../src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../sdk/include;../../sdk/include/libxml2;../../sdk/include/iconv;../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>../../sdk/iconv-1.9.2.win32/lib/iconv.lib;
-../../sdk/libxml2-2.7.8.win32/lib/libxml2.lib;
-../../sdk/libxmlsec-1.2.18.win32/lib/libxmlsec.lib;
-../../sdk/libxmlsec-1.2.18.win32/lib/libxmlsec-openssl.lib;
-../../sdk/libxslt-1.1.26.win32/lib/libexslt.lib;
-../../sdk/libxslt-1.1.26.win32/lib/libxslt.lib;
-../../sdk/openssl-0.9.8a.win32/lib/libeay32.lib;
-../../sdk/openssl-0.9.8a.win32/lib/ssleay32.lib;
-../../sdk/zlib-1.2.5/lib/zdll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../sdk/lib/iconv.lib;
+../../sdk/lib/libxml2.lib;
+../../sdk/lib/libxmlsec.lib;
+../../sdk/lib/libxmlsec-mscrypto.lib;
+../../sdk/lib/libexslt.lib;
+../../sdk/lib/libxslt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -98,7 +95,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>../../sdk/iconv-1.9.2.win32/include;../../sdk/libxml2-2.7.8.win32/include;../../sdk/libxmlsec-1.2.18.win32/include;../../sdk/libxslt-1.1.26.win32/include;../../sdk/openssl-0.9.8a.win32/include;../../sdk/zlib-1.2.5/include;../../src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../sdk/include;../../sdk/include/libxml2;../../sdk/include/iconv;../../src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -106,15 +103,12 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>../../sdk/iconv-1.9.2.win32/lib/iconv.lib;
-../../sdk/libxml2-2.7.8.win32/lib/libxml2.lib;
-../../sdk/libxmlsec-1.2.18.win32/lib/libxmlsec.lib;
-../../sdk/libxmlsec-1.2.18.win32/lib/libxmlsec-openssl.lib;
-../../sdk/libxslt-1.1.26.win32/lib/libexslt.lib;
-../../sdk/libxslt-1.1.26.win32/lib/libxslt.lib;
-../../sdk/openssl-0.9.8a.win32/lib/libeay32.lib;
-../../sdk/openssl-0.9.8a.win32/lib/ssleay32.lib;
-../../sdk/zlib-1.2.5/lib/zdll.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../sdk/lib/iconv.lib;
+../../sdk/lib/libxml2.lib;
+../../sdk/lib/libxmlsec.lib;
+../../sdk/lib/libxmlsec-mscrypto.lib;
+../../sdk/lib/libexslt.lib;
+../../sdk/lib/libxslt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

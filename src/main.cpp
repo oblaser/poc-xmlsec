@@ -16,8 +16,8 @@ copyright       -
 #endif
 
 
-#define USE_XMLSEC_VERIFY1          (1)
-#define USE_XMLSEC_VERIFY2          (0)
+#define USE_XMLSEC_VERIFY1          (0)
+#define USE_XMLSEC_VERIFY2          (1)
 #define USE_XMLSEC_VERIFY3          (0)
 #define USE_XMLSEC_VERIFY4          (0)
 
@@ -46,7 +46,9 @@ int main(int argc, char** argv)
 
 #if USE_XMLSEC_VERIFY1 || USE_XMLSEC_VERIFY2
             "../../testFiles/xmlsec/sign1-res.xml",
+            //"../../testFiles/xmlsec/sign1-res_with_public-key.xml",
             //"../../testFiles/xmlsec/sign2-res.xml",
+            //"../../testFiles/xmlsec/sign2-res_with_public-key.xml",
             //"../../testFiles/xml-01_signed.xml",
             //"../../testFiles/xml-01_signed_with_public-key.xml",
 
@@ -92,7 +94,7 @@ int main(int argc, char** argv)
 
 #if defined(_DEBUG) && 1
     cout << /*omw::foreColor(26) <<*/ "===============\nreturn " << r << "\npress enter..." << /*omw::normal <<*/ endl;
-    int dbg___getc_ = getc(stdin);
+    //int dbg___getc_ = getc(stdin);
 #endif
 
     return r;

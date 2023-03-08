@@ -23,6 +23,7 @@ Slightly adapted by Oliver Blaser, to match github.com/oblaser/poc-xmlsec
 */
 
 #define XMLSEC_CRYPTO_OPENSSL
+#define XMLSEC_CRYPTO_DYNAMIC_LOADING
 #include "verify1.h"
 
 #include <stdlib.h>

@@ -22,7 +22,8 @@
 
  */
 
-#define XMLSEC_CRYPTO_OPENSSL
+#define XMLSEC_CRYPTO_MSCRYPTO
+#define XMLSEC_CRYPTO_DYNAMIC_LOADING
 #include "verify2.h"
 
 #include <stdlib.h>
@@ -42,6 +43,8 @@
 #include <xmlsec/xmltree.h>
 #include <xmlsec/xmldsig.h>
 #include <xmlsec/crypto.h>
+
+#if 1 // original
 
 static xmlSecKeysMngrPtr load_keys(char** files, int files_size);
 static int verify_file(xmlSecKeysMngrPtr mngr, const char* xml_file);
@@ -291,5 +294,260 @@ done:
     }
     return(res);
 }
+#else
 
+#include <string>
+#include <vector>
 
+static xmlSecKeysMngrPtr load_keys();
+static int verify_file(xmlSecKeysMngrPtr mngr, const char* xml_file);
+
+int
+verify2_main(int argc, char** argv) {
+#ifndef XMLSEC_NO_XSLT
+    xsltSecurityPrefsPtr xsltSecPrefs = NULL;
+#endif /* XMLSEC_NO_XSLT */
+
+    xmlSecKeysMngrPtr mngr;
+
+    assert(argv);
+
+    if (argc != 2) {
+        fprintf(stderr, "Error: wrong number of arguments.\n");
+        fprintf(stderr, "Usage: %s <xml-file>\n", argv[0]);
+        return(1);
+    }
+
+    /* Init libxml and libxslt libraries */
+    xmlInitParser();
+    LIBXML_TEST_VERSION
+        xmlLoadExtDtdDefaultValue = XML_DETECT_IDS | XML_COMPLETE_ATTRS;
+    xmlSubstituteEntitiesDefault(1);
+#ifndef XMLSEC_NO_XSLT
+    xmlIndentTreeOutput = 1;
+#endif /* XMLSEC_NO_XSLT */
+
+    /* Init libxslt */
+#ifndef XMLSEC_NO_XSLT
+    /* disable everything */
+    xsltSecPrefs = xsltNewSecurityPrefs();
+    xsltSetSecurityPrefs(xsltSecPrefs, XSLT_SECPREF_READ_FILE, xsltSecurityForbid);
+    xsltSetSecurityPrefs(xsltSecPrefs, XSLT_SECPREF_WRITE_FILE, xsltSecurityForbid);
+    xsltSetSecurityPrefs(xsltSecPrefs, XSLT_SECPREF_CREATE_DIRECTORY, xsltSecurityForbid);
+    xsltSetSecurityPrefs(xsltSecPrefs, XSLT_SECPREF_READ_NETWORK, xsltSecurityForbid);
+    xsltSetSecurityPrefs(xsltSecPrefs, XSLT_SECPREF_WRITE_NETWORK, xsltSecurityForbid);
+    xsltSetDefaultSecurityPrefs(xsltSecPrefs);
+#endif /* XMLSEC_NO_XSLT */
+
+    /* Init xmlsec library */
+    if (xmlSecInit() < 0) {
+        fprintf(stderr, "Error: xmlsec initialization failed.\n");
+        return(-1);
+    }
+
+    /* Check loaded library version */
+    if (xmlSecCheckVersion() != 1) {
+        fprintf(stderr, "Error: loaded xmlsec library version is not compatible.\n");
+        return(-1);
+    }
+
+    /* Load default crypto engine if we are supporting dynamic
+     * loading for xmlsec-crypto libraries. Use the crypto library
+     * name ("openssl", "nss", etc.) to load corresponding
+     * xmlsec-crypto library.
+     */
+#ifdef XMLSEC_CRYPTO_DYNAMIC_LOADING
+    if (xmlSecCryptoDLLoadLibrary(NULL) < 0) {
+        fprintf(stderr, "Error: unable to load default xmlsec-crypto library. Make sure\n"
+                        "that you have it installed and check shared libraries path\n"
+                        "(LD_LIBRARY_PATH and/or LTDL_LIBRARY_PATH) environment variables.\n");
+        return(-1);
+    }
+#endif /* XMLSEC_CRYPTO_DYNAMIC_LOADING */
+
+    /* Init crypto library */
+    if (xmlSecCryptoAppInit(NULL) < 0) {
+        fprintf(stderr, "Error: crypto initialization failed.\n");
+        return(-1);
+    }
+
+    /* Init xmlsec-crypto library */
+    if (xmlSecCryptoInit() < 0) {
+        fprintf(stderr, "Error: xmlsec-crypto initialization failed.\n");
+        return(-1);
+    }
+
+    /* create keys manager and load keys */
+    mngr = load_keys();
+    if (mngr == NULL) {
+        return(-1);
+    }
+
+    /* verify file */
+    if (verify_file(mngr, argv[1]) < 0) {
+        xmlSecKeysMngrDestroy(mngr);
+        return(-1);
+    }
+
+    /* destroy keys manager */
+    xmlSecKeysMngrDestroy(mngr);
+
+    /* Shutdown xmlsec-crypto library */
+    xmlSecCryptoShutdown();
+
+    /* Shutdown crypto library */
+    xmlSecCryptoAppShutdown();
+
+    /* Shutdown xmlsec library */
+    xmlSecShutdown();
+
+    /* Shutdown libxslt/libxml */
+#ifndef XMLSEC_NO_XSLT
+    xsltFreeSecurityPrefs(xsltSecPrefs);
+    xsltCleanupGlobals();
+#endif /* XMLSEC_NO_XSLT */
+    xmlCleanupParser();
+
+    return(0);
+}
+
+/**
+ * load_keys:
+ * @files:              the list of filenames.
+ * @files_size:         the number of filenames in #files.
+ *
+ * Creates simple keys manager and load PEM keys from #files in it.
+ * The caller is responsible for destroying returned keys manager using
+ * @xmlSecKeysMngrDestroy.
+ *
+ * Returns the pointer to newly created keys manager or NULL if an error
+ * occurs.
+ */
+xmlSecKeysMngrPtr
+load_keys() {
+    xmlSecKeysMngrPtr mngr;
+    xmlSecKeyPtr key;
+    int i;
+
+    /* create and initialize keys manager, we use a simple list based
+     * keys manager, implement your own xmlSecKeysStore klass if you need
+     * something more sophisticated
+     */
+    mngr = xmlSecKeysMngrCreate();
+    if (mngr == NULL) {
+        fprintf(stderr, "Error: failed to create keys manager.\n");
+        return(NULL);
+    }
+    if (xmlSecCryptoAppDefaultKeysMngrInit(mngr) < 0) {
+        fprintf(stderr, "Error: failed to initialize keys manager.\n");
+        xmlSecKeysMngrDestroy(mngr);
+        return(NULL);
+    }
+
+    const std::vector<xmlSecByte> keyData = {
+/* testFiles/xml-01_signed_with_public-key.xml */ 0x30, 0x47, 0x02, 0x40, 0xB7, 0xA9, 0xE3, 0xC7, 0x44, 0xC3, 0x00, 0x4E, 0x4E, 0x58, 0xE2, 0x9E, 0x93, 0x3C, 0x63, 0xB6, 0x51, 0xA3, 0x11, 0x5D, 0x44, 0xC9, 0xE9, 0x41, 0xB4, 0x75, 0x00, 0x3D, 0x07, 0xA6, 0x7C, 0x52, 0xCA, 0x70, 0x13, 0x4E, 0xE1, 0x40, 0x3A, 0x96, 0x61, 0x73, 0xB9, 0x3E, 0x37, 0x82, 0xC7, 0x4E, 0xC4, 0xCB, 0x3D, 0x29, 0xCF, 0x76, 0xB5, 0xBC, 0xAE, 0xA8, 0x1A, 0x06, 0xC1, 0x8C, 0x9B, 0x19, 0x02, 0x03, 0x01, 0x00, 0x01
+    };
+
+    const std::string keyDataStr =
+/* testFiles/xml-01_signed_with_public-key.xml */ "MEcCQLep48dEwwBOTljinpM8Y7ZRoxFdRMnpQbR1AD0HpnxSynATTuFAOpZhc7k+N4LHTsTLPSnPdrW8rqgaBsGMmxkCAwEAAQ=="
+        ;
+
+    /* load key */
+    //key = xmlSecCryptoAppKeyLoad(files[i], xmlSecKeyDataFormatPem, NULL, NULL, NULL);
+    key = xmlSecCryptoAppKeyLoadMemory((const xmlSecByte*)keyDataStr.data(), keyDataStr.size(), xmlSecKeyDataFormatCertDer, NULL, NULL, NULL);
+    if (key == NULL) {
+        fprintf(stderr, "Error: failed to load pem key from \"%s\"\n", "binary data");
+        xmlSecKeysMngrDestroy(mngr);
+        return(NULL);
+    }
+
+    /* set key name to the file name, this is just an example! */
+    if (xmlSecKeySetName(key, BAD_CAST "binary data") < 0) {
+        fprintf(stderr, "Error: failed to set key name for key from \"%s\"\n", "binary data");
+        xmlSecKeyDestroy(key);
+        xmlSecKeysMngrDestroy(mngr);
+        return(NULL);
+    }
+
+    /* add key to keys manager, from now on keys manager is responsible
+        * for destroying key
+        */
+    if (xmlSecCryptoAppDefaultKeysMngrAdoptKey(mngr, key) < 0) {
+        fprintf(stderr, "Error: failed to add key from \"%s\" to keys manager\n", "binary data");
+        xmlSecKeyDestroy(key);
+        xmlSecKeysMngrDestroy(mngr);
+        return(NULL);
+    }
+
+    return(mngr);
+}
+
+/**
+ * verify_file:
+ * @mngr:               the pointer to keys manager.
+ * @xml_file:           the signed XML file name.
+ *
+ * Verifies XML signature in #xml_file.
+ *
+ * Returns 0 on success or a negative value if an error occurs.
+ */
+int
+verify_file(xmlSecKeysMngrPtr mngr, const char* xml_file) {
+    xmlDocPtr doc = NULL;
+    xmlNodePtr node = NULL;
+    xmlSecDSigCtxPtr dsigCtx = NULL;
+    int res = -1;
+
+    assert(mngr);
+    assert(xml_file);
+
+    /* load file */
+    doc = xmlParseFile(xml_file);
+    if ((doc == NULL) || (xmlDocGetRootElement(doc) == NULL)) {
+        fprintf(stderr, "Error: unable to parse file \"%s\"\n", xml_file);
+        goto done;
+    }
+
+    /* find start node */
+    node = xmlSecFindNode(xmlDocGetRootElement(doc), xmlSecNodeSignature, xmlSecDSigNs);
+    if (node == NULL) {
+        fprintf(stderr, "Error: start node not found in \"%s\"\n", xml_file);
+        goto done;
+    }
+
+    /* create signature context */
+    dsigCtx = xmlSecDSigCtxCreate(mngr);
+    if (dsigCtx == NULL) {
+        fprintf(stderr, "Error: failed to create signature context\n");
+        goto done;
+    }
+
+    /* Verify signature */
+    if (xmlSecDSigCtxVerify(dsigCtx, node) < 0) {
+        fprintf(stderr, "Error: signature verify\n");
+        goto done;
+    }
+
+    /* print verification result to stdout */
+    if (dsigCtx->status == xmlSecDSigStatusSucceeded) {
+        fprintf(stdout, "Signature is OK\n");
+    }
+    else {
+        fprintf(stdout, "Signature is INVALID\n");
+    }
+
+    /* success */
+    res = 0;
+
+done:
+    /* cleanup */
+    if (dsigCtx != NULL) {
+        xmlSecDSigCtxDestroy(dsigCtx);
+    }
+
+    if (doc != NULL) {
+        xmlFreeDoc(doc);
+    }
+    return(res);
+}
+#endif

@@ -32,7 +32,8 @@
 
  */
 
-#define XMLSEC_CRYPTO_OPENSSL
+#define XMLSEC_CRYPTO_MSCRYPTO
+#define XMLSEC_CRYPTO_DYNAMIC_LOADING
 #include "verify4.h"
 
 #include <stdlib.h>
