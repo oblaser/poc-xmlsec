@@ -19,3 +19,12 @@ $ openssl req -new -x509 -key rsakey.pem -out rsacert.pem -days 36500 -sha1
 $ openssl pkcs12 -export -inkey rsakey.pem -in rsacert.pem -out rsacert.pfx
 ```
 The _rsacert.pfx_ file was created using "1234" as password.
+
+---
+
+# Sign and verify with xmlsec1 in Linux
+
+```
+$ xmlsec1 --sign --output xml-out.xml --privkey-pem rsakey.pem xml-01.template.xml
+$ xmlsec1 --verify --pubkey-pem rsapub.pem xml-out.xml
+```
